@@ -1,0 +1,4 @@
+select quantity, supported_chains.name, supported_chains.symbol from interest_account 
+INNER JOIN interest_account_supported_coins ON interest_account.interest_account_supported_coins_id=interest_account_supported_coins.interest_account_supported_coins_id
+INNER JOIN supported_chains ON interest_account_supported_coins.chain_id=supported_chains.chain_id
+where user_id = '{UserID}'
