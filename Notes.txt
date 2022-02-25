@@ -15,20 +15,22 @@ https://github.com/calumcourtney/crypto_cloudathon_lending_api
 
 WALLET:
 	CREATE TABLE users (
-	   user_id serial PRIMARY KEY,
+	   user_id char(36) PRIMARY KEY,
 	   email VARCHAR ( 255 ) UNIQUE NOT NULL
 	);
 
 
 	CREATE TABLE crypto_connection_details (
-	   connection_id serial PRIMARY KEY,
-	   primary_key VARCHAR ( 255 ) UNIQUE NOT NULL
+	   connection_id char(36) PRIMARY KEY,
+	   public_address VARCHAR ( 36 ) NOT NULL,
+	   public_key VARCHAR ( 70 ) NOT NULL.
+	   private_key VARCHAR ( 70 ) NOT NULL
 	);
 
 	CREATE TABLE wallet (
-	   wallet_id serial PRIMARY KEY,
-	   user_id INT NOT NULL,
-	   connection_id INT NOT NULL,
+	   wallet_id char(36) PRIMARY KEY,
+	   user_id char(36) NOT NULL,
+	   connection_id char(36) NOT NULL,
 	   FOREIGN KEY (user_id)
 		  REFERENCES users (user_id),
 		FOREIGN KEY (connection_id)
@@ -36,16 +38,16 @@ WALLET:
 	);
 
 	CREATE TABLE supported_chains (
-	   chain_id serial PRIMARY KEY,
+	   chain_id char(36) PRIMARY KEY,
 	   name VARCHAR ( 255 ) UNIQUE NOT NULL,
 	   symbol VARCHAR ( 255 ) UNIQUE NOT NULL
 	);
 
 
 	CREATE TABLE cypto_transactions (
-	   transaction_id serial PRIMARY KEY,
-	   wallet_id INT NOT NULL,
-	   chain_id INT NOT NULL,
+	   transaction_id char(36) PRIMARY KEY,
+	   wallet_id char(36) NOT NULL,
+	   chain_id char(36) NOT NULL,
 	   transaction_hash VARCHAR ( 255 ) UNIQUE NOT NULL,
 	   date_started timestamp NOT NULL,
 	   date_completed timestamp NOT NULL,
@@ -59,8 +61,8 @@ WALLET:
 
 INTEREST ACCOUNT:
 	CREATE TABLE interest_account_supported_coins (
-	   interest_account_supported_coins_id serial PRIMARY KEY,
-	   chain_id INT NOT NULL,
+	   interest_account_supported_coins_id char(36) PRIMARY KEY,
+	   chain_id char(36) NOT NULL,
 	   interest_rate double PRECISION NOT NULL,
 	   FOREIGN KEY (chain_id)
 		  REFERENCES supported_chains (chain_id)	  
@@ -68,9 +70,9 @@ INTEREST ACCOUNT:
 
 
 	CREATE TABLE interest_account (
-	   interest_account_id serial PRIMARY KEY,
-	   user_id INT NOT NULL,
-	   interest_account_supported_coins_id INT NOT NULL,
+	   interest_account_id char(36) PRIMARY KEY,
+	   user_id char(36) NOT NULL,
+	   interest_account_supported_coins_id char(36) NOT NULL,
 	   quantity double PRECISION NOT NULL,
 	   status VARCHAR ( 255 ) NOT NULL,
 	   opened_date timestamp NOT NULL,
@@ -81,8 +83,8 @@ INTEREST ACCOUNT:
 	);
 	
 	CREATE TABLE interest_transactions (
-	   interest_transactions_id serial PRIMARY KEY,
-	   interest_account_id INT NOT NULL,
+	   interest_transactions_id char(36) PRIMARY KEY,
+	   interest_account_id char(36) NOT NULL,
 	   date timestamp NOT NULL,
 	   quantity double PRECISION NOT NULL,
 	   start_quantity double PRECISION NOT NULL,
