@@ -42,14 +42,14 @@ def get_db_connection():
     # )
 
 #This shouldn't live here. Will move later
-@app.route('/CyptoValueInUSD/<string:Symbol>')
-def CyptoValueInUSD(Symbol: str):
-    url = 'https://data.messari.io/api/v1/assets/%s/metrics/market-data' % Symbol  
-    response = requests.get(url)
-    cryptoData = json.loads(response.content)
-    valueInUSD = cryptoData['data']['market_data']['price_usd']
-    print(valueInUSD)
-    return str(valueInUSD)
+# @app.route('/CyptoValueInUSD/<string:Symbol>')
+# def CyptoValueInUSD(Symbol: str):
+#     url = 'https://data.messari.io/api/v1/assets/%s/metrics/market-data' % Symbol  
+#     response = requests.get(url)
+#     cryptoData = json.loads(response.content)
+#     valueInUSD = cryptoData['data']['market_data']['price_usd']
+#     print(valueInUSD)
+#     return str(valueInUSD)
 
 
 @app.route('/InvestmentAccount')
@@ -57,49 +57,49 @@ def Test():
     return "BIG TEST"
 
 
-@app.route('/InvestmentAccount/<string:UserID>')
-def GetInvestmentAccount_byuser(UserID: str):
-    # First user ID is "GetInvestmentAccountsAssociatedWithUser/4aa9777c-f2e9-4812-9270-5f3b4c178d89"
-    currentDir = os.getcwd()
-    # queryPath = currentDir + "\crypto_cloudathon_rewards_account_api\SQL_Queries\GetInvestmentAccountsAssociatedWithUser.sql"    
-    queryPath = currentDir + "/SQL_Queries/GetInvestmentAccountsAssociatedWithUser.sql" 
-    try:
-      with open(queryPath) as f:
-        queryPath = f.read()
-        queryPath = queryPath.format(UserID = UserID)
-        conn = get_db_connection()
-        cursor = conn.cursor()
+# @app.route('/InvestmentAccount/<string:UserID>')
+# def GetInvestmentAccount_byuser(UserID: str):
+#     # First user ID is "GetInvestmentAccountsAssociatedWithUser/4aa9777c-f2e9-4812-9270-5f3b4c178d89"
+#     currentDir = os.getcwd()
+#     # queryPath = currentDir + "\crypto_cloudathon_rewards_account_api\SQL_Queries\GetInvestmentAccountsAssociatedWithUser.sql"    
+#     queryPath = currentDir + "/SQL_Queries/GetInvestmentAccountsAssociatedWithUser.sql" 
+#     try:
+#       with open(queryPath) as f:
+#         queryPath = f.read()
+#         queryPath = queryPath.format(UserID = UserID)
+#         conn = get_db_connection()
+#         cursor = conn.cursor()
 
-        cursor.execute(queryPath)
-        print(cursor.statusmessage)
-        allInvestmentAccounts = cursor.fetchall()
-        cursor.close()
-        conn.close()
+#         cursor.execute(queryPath)
+#         print(cursor.statusmessage)
+#         allInvestmentAccounts = cursor.fetchall()
+#         cursor.close()
+#         conn.close()
         
-        results = []
-        for investmentAccount in allInvestmentAccounts:
-          print(investmentAccount)
-          CryptoCurrencySymbol = investmentAccount[2]
-          if CryptoCurrencySymbol == "BCY":
-            CryptoCurrencySymbol = "BTC"
+#         results = []
+#         for investmentAccount in allInvestmentAccounts:
+#           print(investmentAccount)
+#           CryptoCurrencySymbol = investmentAccount[2]
+#           if CryptoCurrencySymbol == "BCY":
+#             CryptoCurrencySymbol = "BTC"
 
 
-          valueInUSD = float(CyptoValueInUSD(CryptoCurrencySymbol))          
+#           valueInUSD = float(CyptoValueInUSD(CryptoCurrencySymbol))          
           
-          totalValueOfCurrency = valueInUSD * investmentAccount[0]
+#           totalValueOfCurrency = valueInUSD * investmentAccount[0]
 
-          result={}
-          result['Coin']= investmentAccount[1]
-          result['NumberCoins']= investmentAccount[0]
-          result['UserID']= investmentAccount[3]
-          result['ValueUSD']= totalValueOfCurrency
-          results.append(result)
-        return jsonify(results)
+#           result={}
+#           result['Coin']= investmentAccount[1]
+#           result['NumberCoins']= investmentAccount[0]
+#           result['UserID']= investmentAccount[3]
+#           result['ValueUSD']= totalValueOfCurrency
+#           results.append(result)
+#         return jsonify(results)
 
-    except Exception as err:
-      error = os.listdir(os.getcwd())
-      error = str(error) + "\n" + str(err)
-      return str(error) 
+#     except Exception as err:
+#       error = os.listdir(os.getcwd())
+#       error = str(error) + "\n" + str(err)
+#       return str(error) 
 
 
 
@@ -267,6 +267,48 @@ def GetInvestmentAccount_byuser(UserID: str):
 #       return "ERROR: " + err
 
 # ChainID()
+
+
+# @app.route('/InvestmentAccount/SupportedCoins')
+# def InvestmentAccount_InterestPayments():        
+    
+    
+#     conn = get_db_connection()
+#     cursor = conn.cursor()
+    
+#     try:
+#       # cursor.execute("select user_id from users;")
+#       cursor.execute("select * from users;")
+#       print(cursor.statusmessage)
+#       result = cursor.fetchall()
+#       cursor.close()
+#       conn.close()
+        
+#       return result[0][0]
+
+#     except Exception as err:
+#       print ("Oops! An exception has occured:")
+#       print ("Exception TYPE:")
+#       return "ERROR: " + err    
+    
+    
+    
+#     transferringToInterestAccountQuery = os.getcwd() + "\SQL_Queries\AddingInterestToInvestmentAccounts.sql"
+#     with open(transferringToInterestAccountQuery) as f:
+#       transferringToInterestAccountQuery = f.read()
+#       print(transferringToInterestAccountQuery)
+#       conn = get_db_connection()
+#       cursor = conn.cursor()
+      
+#       try:
+#         cursor.execute(transferringToInterestAccountQuery)
+#         print(cursor.statusmessage)
+#         conn.commit()
+#         cursor.close()
+#         conn.close()
+#         return "SUCCESS"
+#       except Exception as err:
+#         return jsonify(err)
 
 if __name__ == '__main__':
     app.run()
