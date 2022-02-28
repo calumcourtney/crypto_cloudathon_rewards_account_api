@@ -94,7 +94,9 @@ def GetInvestmentAccount_byuser(UserID: str):
         return jsonify(results)
 
     except Exception as err:
-      return str(err) 
+      error = os.listdir(os.getcwd())
+      error = str(error) + "\n" + str(err)
+      return str(error) 
 
 
 
