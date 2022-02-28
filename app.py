@@ -122,31 +122,31 @@ def GetInvestmentAccount_byuser(UserID: str):
 #       except Exception as err:
 #         return jsonify(err)
 
-@app.route('/InvestmentAccount/TransfersTo/<int:Quantity>/<string:UserID>/<string:ChainSymbol>')
-def InvestmentAccount_TransfersTo(Quantity, UserID, ChainSymbol):  
+# @app.route('/InvestmentAccount/TransfersTo/<int:Quantity>/<string:UserID>/<string:ChainSymbol>')
+# def InvestmentAccount_TransfersTo(Quantity, UserID, ChainSymbol):  
 
-    # http://127.0.0.1:5000/InvestmentAccount/TransfersTo/1/e16666ff-c559-4aab-96eb-f0a5c2c77b18/BCY
-    # transactionID = CreateTransaction(UserID,ChainSymbol,Quantity)
-    InterestAccountID = str(uuid.uuid4())  
-    InterestTransactionsId = str(uuid.uuid4())  
+#     # http://127.0.0.1:5000/InvestmentAccount/TransfersTo/1/e16666ff-c559-4aab-96eb-f0a5c2c77b18/BCY
+#     # transactionID = CreateTransaction(UserID,ChainSymbol,Quantity)
+#     InterestAccountID = str(uuid.uuid4())  
+#     InterestTransactionsId = str(uuid.uuid4())  
     
-    transferringToInterestAccountQuery = os.getcwd() + "/SQL_Queries/TransferringToInterestAccount.sql"
-    with open(transferringToInterestAccountQuery) as f:
-      transferringToInterestAccountQuery = f.read()
-      transferringToInterestAccountQuery = transferringToInterestAccountQuery.format(ChainSymbol = ChainSymbol, UserID = UserID, Quantity = Quantity, InterestAccountID = InterestAccountID, InterestTransactionsId = InterestTransactionsId)
-      print(transferringToInterestAccountQuery)
-      conn = get_db_connection()
-      cursor = conn.cursor()
+#     transferringToInterestAccountQuery = os.getcwd() + "/SQL_Queries/TransferringToInterestAccount.sql"
+#     with open(transferringToInterestAccountQuery) as f:
+#       transferringToInterestAccountQuery = f.read()
+#       transferringToInterestAccountQuery = transferringToInterestAccountQuery.format(ChainSymbol = ChainSymbol, UserID = UserID, Quantity = Quantity, InterestAccountID = InterestAccountID, InterestTransactionsId = InterestTransactionsId)
+#       print(transferringToInterestAccountQuery)
+#       conn = get_db_connection()
+#       cursor = conn.cursor()
       
-      try:
-        cursor.execute(transferringToInterestAccountQuery)
-        print(cursor.statusmessage)
-        conn.commit()
-        cursor.close()
-        conn.close()
-        return "SUCCESS " # + transactionID
-      except Exception as err:
-        return jsonify(err)
+#       try:
+#         cursor.execute(transferringToInterestAccountQuery)
+#         print(cursor.statusmessage)
+#         conn.commit()
+#         cursor.close()
+#         conn.close()
+#         return "SUCCESS " # + transactionID
+#       except Exception as err:
+#         return jsonify(err)
 
 # @app.route('/InvestmentAccount/TransfersFrom/<float(signed=True):Quantity>/<string:InterestAccountID>')
 # def InvestmentAccount_TransfersFrom(Quantity, InterestAccountID):    
