@@ -1,6 +1,5 @@
 # from asyncio.windows_events import NULL
 # from dataclasses import dataclass
-from asyncio.windows_events import NULL
 from symtable import Symbol
 import requests
 import json
@@ -9,11 +8,11 @@ import os
 import uuid
 from flask import jsonify
 from flask import Flask, request
-from flask_cors import CORS
+# from flask_cors import CORS
 # from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
-CORS(app)
+# CORS(app)
 
 # DATABASE_HOST = os.getenv("DATABASE_HOST")
 # DATABASE_USER = os.getenv("DATABASE_USER")
@@ -270,7 +269,7 @@ def Test():
 
 
 # @app.route('/InvestmentAccount/SupportedCoins')
-# def InvestmentAccount_InterestPayments():        
+# def InvestmentAccount_SupportedCoins():        
     
     
 #     conn = get_db_connection()
@@ -278,7 +277,7 @@ def Test():
     
 #     try:
 #       # cursor.execute("select user_id from users;")
-#       cursor.execute("select * from users;")
+#       cursor.execute("select * from interest_account_supported_coins inner join supported_chains ON interest_account_supported_coins.chain_id=supported_chains.chain_id;")
 #       print(cursor.statusmessage)
 #       result = cursor.fetchall()
 #       cursor.close()
