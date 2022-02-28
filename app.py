@@ -61,7 +61,7 @@ def GetInvestmentAccount_byuser(UserID: str):
     # First user ID is "GetInvestmentAccountsAssociatedWithUser/4aa9777c-f2e9-4812-9270-5f3b4c178d89"
     currentDir = os.getcwd()
     # queryPath = currentDir + "\crypto_cloudathon_rewards_account_api\SQL_Queries\GetInvestmentAccountsAssociatedWithUser.sql"    
-    queryPath = currentDir + "/crypto_cloudathon_rewards_account_api/SQL_Queries/GetInvestmentAccountsAssociatedWithUser.sql" 
+    queryPath = currentDir + "/SQL_Queries/GetInvestmentAccountsAssociatedWithUser.sql" 
     try:
       with open(queryPath) as f:
         queryPath = f.read()
@@ -268,46 +268,27 @@ def GetInvestmentAccount_byuser(UserID: str):
 # ChainID()
 
 
-# @app.route('/InvestmentAccount/SupportedCoins')
-# def InvestmentAccount_SupportedCoins():        
+@app.route('/InvestmentAccount/SupportedCoins')
+def InvestmentAccount_SupportedCoins():        
     
     
-#     conn = get_db_connection()
-#     cursor = conn.cursor()
+    conn = get_db_connection()
+    cursor = conn.cursor()
     
-#     try:
-#       # cursor.execute("select user_id from users;")
-#       cursor.execute("select symbol from interest_account_supported_coins inner join supported_chains ON interest_account_supported_coins.chain_id=supported_chains.chain_id;")
-#       print(cursor.statusmessage)
-#       result = cursor.fetchall()
-#       cursor.close()
-#       conn.close()
+    try:
+      # cursor.execute("select user_id from users;")
+      cursor.execute("select symbol from interest_account_supported_coins inner join supported_chains ON interest_account_supported_coins.chain_id=supported_chains.chain_id;")
+      print(cursor.statusmessage)
+      result = cursor.fetchall()
+      cursor.close()
+      conn.close()
         
-#       return jsonify(result)
+      return jsonify(result)
 
-#     except Exception as err:
-#       print ("Oops! An exception has occured:")
-#       print ("Exception TYPE:")
-#       return "ERROR: " + err    
-    
-    
-    
-    # transferringToInterestAccountQuery = os.getcwd() + "\SQL_Queries\AddingInterestToInvestmentAccounts.sql"
-    # with open(transferringToInterestAccountQuery) as f:
-    #   transferringToInterestAccountQuery = f.read()
-    #   print(transferringToInterestAccountQuery)
-    #   conn = get_db_connection()
-    #   cursor = conn.cursor()
-      
-    #   try:
-    #     cursor.execute(transferringToInterestAccountQuery)
-    #     print(cursor.statusmessage)
-    #     conn.commit()
-    #     cursor.close()
-    #     conn.close()
-    #     return "SUCCESS"
-    #   except Exception as err:
-    #     return jsonify(err)
+    except Exception as err:
+      print ("Oops! An exception has occured:")
+      print ("Exception TYPE:")
+      return "ERROR: " + err    
 
 if __name__ == '__main__':
     app.run()
