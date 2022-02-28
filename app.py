@@ -59,7 +59,7 @@ def GetInvestmentAccount_byuser(UserID: str):
     # First user ID is "GetInvestmentAccountsAssociatedWithUser/4aa9777c-f2e9-4812-9270-5f3b4c178d89"
     currentDir = os.getcwd()
     # queryPath = currentDir + "\crypto_cloudathon_rewards_account_api\SQL_Queries\GetInvestmentAccountsAssociatedWithUser.sql"    
-    queryPath = currentDir + "\SQL_Queries\GetInvestmentAccountsAssociatedWithUser.sql" 
+    queryPath = currentDir + "/SQL_Queries/GetInvestmentAccountsAssociatedWithUser.sql" 
     try:
       with open(queryPath) as f:
         queryPath = f.read()
