@@ -121,31 +121,31 @@ def GetInvestmentAccount_byuser(UserID: str):
 #       except Exception as err:
 #         return jsonify(err)
 
-# @app.route('/InvestmentAccount/TransfersTo/<int:Quantity>/<string:UserID>/<string:ChainSymbol>')
-# def InvestmentAccount_TransfersTo(Quantity, UserID, ChainSymbol):  
+@app.route('/InvestmentAccount/TransfersTo/<int:Quantity>/<string:UserID>/<string:ChainSymbol>')
+def InvestmentAccount_TransfersTo(Quantity, UserID, ChainSymbol):  
 
-#     # http://127.0.0.1:5000/InvestmentAccount/TransfersTo/1/e16666ff-c559-4aab-96eb-f0a5c2c77b18/BCY
-#     # transactionID = CreateTransaction(UserID,ChainSymbol,Quantity)
-#     InterestAccountID = str(uuid.uuid4())  
-#     InterestTransactionsId = str(uuid.uuid4())  
+    # http://127.0.0.1:5000/InvestmentAccount/TransfersTo/1/e16666ff-c559-4aab-96eb-f0a5c2c77b18/BCY
+    # transactionID = CreateTransaction(UserID,ChainSymbol,Quantity)
+    InterestAccountID = str(uuid.uuid4())  
+    InterestTransactionsId = str(uuid.uuid4())  
     
-#     transferringToInterestAccountQuery = os.getcwd() + "/SQL_Queries/TransferringToInterestAccount.sql"
-#     with open(transferringToInterestAccountQuery) as f:
-#       transferringToInterestAccountQuery = f.read()
-#       transferringToInterestAccountQuery = transferringToInterestAccountQuery.format(ChainSymbol = ChainSymbol, UserID = UserID, Quantity = Quantity, InterestAccountID = InterestAccountID, InterestTransactionsId = InterestTransactionsId)
-#       print(transferringToInterestAccountQuery)
-#       conn = get_db_connection()
-#       cursor = conn.cursor()
+    transferringToInterestAccountQuery = os.getcwd() + "/SQL_Queries/TransferringToInterestAccount.sql"
+    with open(transferringToInterestAccountQuery) as f:
+      transferringToInterestAccountQuery = f.read()
+      transferringToInterestAccountQuery = transferringToInterestAccountQuery.format(ChainSymbol = ChainSymbol, UserID = UserID, Quantity = Quantity, InterestAccountID = InterestAccountID, InterestTransactionsId = InterestTransactionsId)
+      print(transferringToInterestAccountQuery)
+      conn = get_db_connection()
+      cursor = conn.cursor()
       
-#       try:
-#         cursor.execute(transferringToInterestAccountQuery)
-#         print(cursor.statusmessage)
-#         conn.commit()
-#         cursor.close()
-#         conn.close()
-#         return "SUCCESS " # + transactionID
-#       except Exception as err:
-#         return jsonify(err)
+      try:
+        cursor.execute(transferringToInterestAccountQuery)
+        print(cursor.statusmessage)
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return "SUCCESS " # + transactionID
+      except Exception as err:
+        return jsonify(err)
 
 # @app.route('/InvestmentAccount/TransfersFrom/<float(signed=True):Quantity>/<string:InterestAccountID>')
 # def InvestmentAccount_TransfersFrom(Quantity, InterestAccountID):    
@@ -174,45 +174,45 @@ def GetInvestmentAccount_byuser(UserID: str):
 # sched.start()
 
 
-# def CreateTransaction(fromUser, symbol, quantityOfCoins):
-#     walletsUrl = 'https://crypto-banksters-wallet-api.azurewebsites.net/wallets/user/{UserID}'
-#     url = walletsUrl.format(UserID = fromUser)
-#     response = requests.get(url)
-#     wallets = json.loads(response.content)
+def CreateTransaction(fromUser, symbol, quantityOfCoins):
+    walletsUrl = 'https://crypto-banksters-wallet-api.azurewebsites.net/wallets/user/{UserID}'
+    url = walletsUrl.format(UserID = fromUser)
+    response = requests.get(url)
+    wallets = json.loads(response.content)
 
-#     fromWalletID = NULL
-#     for wallet in wallets:
-#       if wallet['symbol'] == symbol:
-#         fromWalletID = wallet['wallet_id']
-#         break
+    fromWalletID = NULL
+    for wallet in wallets:
+      if wallet['symbol'] == symbol:
+        fromWalletID = wallet['wallet_id']
+        break
     
-#     try:
+    try:
 
-#       requestObject = {}
-#       requestObject['fromWalletId'] = fromWalletID
-#       requestObject['toAddress'] = 'CFpCVuNRfVq828yx2wPn73GTXj388NjrU9'
-#       requestObject['amount'] = quantityOfCoins
+      requestObject = {}
+      requestObject['fromWalletId'] = fromWalletID
+      requestObject['toAddress'] = 'CFpCVuNRfVq828yx2wPn73GTXj388NjrU9'
+      requestObject['amount'] = quantityOfCoins
 
-#       requestBody = json.dumps(requestObject) 
-#       print(requestBody)
-#       headers = {'Content-Type': 'application/json'}
+      requestBody = json.dumps(requestObject) 
+      print(requestBody)
+      headers = {'Content-Type': 'application/json'}
 
-#       r = requests.put('https://crypto-banksters-wallet-api.azurewebsites.net/transaction', data=requestBody, headers=headers)
+      r = requests.put('https://crypto-banksters-wallet-api.azurewebsites.net/transaction', data=requestBody, headers=headers)
       
  
-#       # check status code for response received
-#       # success code - 200
-#       print(r)
-#       print(r.content)
-#       responseJson = json.loads(r.content)
-#       result = responseJson['transaction_id']
+      # check status code for response received
+      # success code - 200
+      print(r)
+      print(r.content)
+      responseJson = json.loads(r.content)
+      result = responseJson['transaction_id']
 
-#       return result
+      return result
 
-#     except Exception as err:
-#       print ("Oops! An exception has occured:")
-#       print ("Exception TYPE:")
-#       return "ERROR: " + err
+    except Exception as err:
+      print ("Oops! An exception has occured:")
+      print ("Exception TYPE:")
+      return "ERROR: " + err
 
 # CreateTransaction("e16666ff-c559-4aab-96eb-f0a5c2c77b18", "BCY")
 
