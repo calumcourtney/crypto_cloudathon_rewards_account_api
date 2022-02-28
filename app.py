@@ -1,3 +1,5 @@
+from asyncio.windows_events import NULL
+from dataclasses import dataclass
 from symtable import Symbol
 import requests
 import json
@@ -14,6 +16,12 @@ DATABASE_HOST = os.getenv("DATABASE_HOST")
 DATABASE_USER = os.getenv("DATABASE_USER")
 DATABASE_PASS = os.getenv("DATABASE_PASS")
 DATABASE_SCHM = os.getenv("DATABASE_SCHM")
+
+
+# test = requests.get('https://crypto-banksters-wallet-api.azurewebsites.net/wallet')
+# test = requests.get('https://crypto-banksters-rewards-account.azurewebsites.net/InvestmentAccount')
+# print(test)
+# print(test.content)
 
 
 
@@ -48,8 +56,9 @@ def Test():
 @app.route('/InvestmentAccount/<string:UserID>')
 def GetInvestmentAccount_byuser(UserID: str):
     # First user ID is "GetInvestmentAccountsAssociatedWithUser/4aa9777c-f2e9-4812-9270-5f3b4c178d89"
+    currentDir = os.getcwd()
+    queryPath = currentDir + "\crypto_cloudathon_rewards_account_api\SQL_Queries\GetInvestmentAccountsAssociatedWithUser.sql"    
     
-    queryPath = os.getcwd() + "\SQL_Queries\GetInvestmentAccountsAssociatedWithUser.sql"
     with open(queryPath) as f:
       queryPath = f.read()
       queryPath = queryPath.format(UserID = UserID)
@@ -155,50 +164,61 @@ def InvestmentAccount_TransfersFrom(Quantity, InterestAccountID):
 
 sched = BackgroundScheduler(daemon=True)
 sched.add_job(InvestmentAccount_InterestPayments,'cron',minute='*')
-sched.start()
+# sched.start()
 
 
-def getWallet(fromUser):
-    # url = 'https://crypto-banksters-wallet-api.azurewebsites.net/wallet/user/5265948e-0ae1-4c2f-a093-4ee742d66507'
+def CreateTransaction(fromUser, symbol):
+    # walletsUrl = 'https://crypto-banksters-wallet-api.azurewebsites.net/wallets/user/{UserID}'
+    # walletsUrl = 'http://127.0.0.1:5000/wallets/user/{UserID}'
+    # url = walletsUrl.format(UserID = fromUser)
     # response = requests.get(url)
-    # cryptoData = json.loads(response.content)
-    # valueInUSD = cryptoData['data']['market_data']['price_usd']
-    # print(valueInUSD)
-    # return str(valueInUSD)
+    # wallets = json.loads(response.content)
+
+    # fromWalletID = NULL
+    # for wallet in wallets:
+    #   if symbol == "BCY":
+    #     wallet['symbol'] = wallet
+    #     fromWalletID = wallet['wallet_id']
+    #     break
+    
+
+
+    
 
 
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
+    # conn = get_db_connection()
+    # cursor = conn.cursor()
     
     try:
-      # cursor.execute("select user_id from users;")
-      # cursor.execute("select wallet_id from wallet where user_id = '5265948e-0ae1-4c2f-a093-4ee742d66507';")
-
-      fromSQLQuery = "select wallet_id from wallet where user_id = '{UserID}';"
-      fromSQLQuery = fromSQLQuery.format(UserID = fromUser)
-
-
-      cursor.execute(fromSQLQuery)
-      print(cursor.statusmessage)
-      fromWalletQueryResult = cursor.fetchall()
-      fromWallet = fromWalletQueryResult[0][0]
-
-      toSQLQuery = "select crypto_connection_details.public_address from wallet inner join crypto_connection_details on wallet.connection_id = crypto_connection_details.connection_id where wallet.user_id = '{UserID}'";
-      toSQLQuery = toSQLQuery.format(UserID = '5265948e-0ae1-4c2f-a093-4ee742d66507')
-      cursor.execute(toSQLQuery)
-      print(cursor.statusmessage)
-      toWalletQueryResult = cursor.fetchall()
-      toAddress = toWalletQueryResult[0][0]
+      # toSQLQuery = "select crypto_connection_details.public_address from wallet inner join crypto_connection_details on wallet.connection_id = crypto_connection_details.connection_id where wallet.user_id = '{UserID}'";
+      # toSQLQuery = toSQLQuery.format(UserID = '5265948e-0ae1-4c2f-a093-4ee742d66507')
+      # cursor.execute(toSQLQuery)
+      # print(cursor.statusmessage)
+      # toWalletQueryResult = cursor.fetchall()
+      # toAddress = toWalletQueryResult[0][0]
 
       requestObject = {}
-      requestObject['fromWalletId'] = fromWallet
-      requestObject['toAddress'] = toAddress
-      requestObject['amount'] = 0.1
+      # requestObject['fromWalletId'] = fromWalletID
+      # requestObject['toAddress'] = 'CFpCVuNRfVq828yx2wPn73GTXj388NjrU9'
+      # requestObject['amount'] = 10
+
+      # requestObject['fromWalletId'] = "cd6076fc-e4bc-4f34-800b-1fdf8c64e884"
+      # requestObject['toAddress'] = "BsCBSiUzqnTQgnHrSejfg5ac1syQewExGw"
+      # requestObject['amount'] = 500
+
+      requestObject = {
+        "fromWalletId": "cd6076fc-e4bc-4f34-800b-1fdf8c64e884",
+        "toAddress": "BsCBSiUzqnTQgnHrSejfg5ac1syQewExGw",
+        "amount": 500
+      }
+
       requestBody = json.dumps(requestObject) 
       print(requestBody)
+      headers = {'Content-Type': 'application/json'}
 
-      r = requests.put('https://crypto-banksters-wallet-api.azurewebsites.net/transaction', data = requestObject)
+      r = requests.put('http://127.0.0.1:5000/transaction', json=requestObject, headers=headers)
+      
  
       # check status code for response received
       # success code - 200
@@ -221,29 +241,30 @@ def getWallet(fromUser):
       print ("Exception TYPE:")
       return "ERROR: " + err
 
-# getWallet("e16666ff-c559-4aab-96eb-f0a5c2c77b18")
+# CreateTransaction("e16666ff-c559-4aab-96eb-f0a5c2c77b18", "BCY")
 
 
-# def GetFirstUser():
-#     conn_string = "host=cloudathoncryptodb.postgres.database.azure.com port=5432 dbname=cloudathon user=cloud_admin password=CheeseOnToast64! sslmode=require"
-#     conn = psycopg2.connect(conn_string)
-#     print("Connection established")
-#     cursor = conn.cursor()
+
+def GetFirstUser():
+    conn_string = "host=cloudathoncryptodb.postgres.database.azure.com port=5432 dbname=cloudathon user=cloud_admin password=CheeseOnToast64! sslmode=require"
+    conn = psycopg2.connect(conn_string)
+    print("Connection established")
+    cursor = conn.cursor()
     
-#     try:
-#       # cursor.execute("select user_id from users;")
-#       cursor.execute("select * from users;")
-#       print(cursor.statusmessage)
-#       result = cursor.fetchall()
-#       cursor.close()
-#       conn.close()
+    try:
+      # cursor.execute("select user_id from users;")
+      cursor.execute("select * from users;")
+      print(cursor.statusmessage)
+      result = cursor.fetchall()
+      cursor.close()
+      conn.close()
         
-#       return result[0][0]
+      return result[0][0]
 
-#     except Exception as err:
-#       print ("Oops! An exception has occured:")
-#       print ("Exception TYPE:")
-#       return "ERROR: " + err
+    except Exception as err:
+      print ("Oops! An exception has occured:")
+      print ("Exception TYPE:")
+      return "ERROR: " + err
 
 # GetFirstUser()
 
