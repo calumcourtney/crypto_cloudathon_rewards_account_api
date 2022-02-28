@@ -26,16 +26,17 @@ DATABASE_SCHM = os.getenv("DATABASE_SCHM")
 
 
 def get_db_connection():
-    if __debug__:
-      return psycopg2.connect("host=cloudathoncryptodb.postgres.database.azure.com port=5432 dbname=cloudathon user=cloud_admin password=CheeseOnToast64! sslmode=require")
+    return psycopg2.connect("host=cloudathoncryptodb.postgres.database.azure.com port=5432 dbname=cloudathon user=cloud_admin password=CheeseOnToast64! sslmode=require")
+    # if __debug__:
+    #   return psycopg2.connect("host=cloudathoncryptodb.postgres.database.azure.com port=5432 dbname=cloudathon user=cloud_admin password=CheeseOnToast64! sslmode=require")
 
-    else:
-      return psycopg2.connect(
-          host=DATABASE_HOST,
-          user=DATABASE_USER,
-          password=DATABASE_PASS,
-          dbname=DATABASE_SCHM
-    )
+    # else:
+    #   return psycopg2.connect(
+    #       host=DATABASE_HOST,
+    #       user=DATABASE_USER,
+    #       password=DATABASE_PASS,
+    #       dbname=DATABASE_SCHM
+    # )
 
 #This shouldn't live here. Will move later
 @app.route('/CyptoValueInUSD/<string:Symbol>')
